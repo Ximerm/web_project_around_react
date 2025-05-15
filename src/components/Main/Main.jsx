@@ -2,14 +2,46 @@ import profileAvatar from "../../images/Profile/Avatar.png";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
 import addButton from "../../images/Profile/Add_Button.svg";
+import Popup from "./Popup/Popup";
+import { useState } from "react";
+import NewCard from "../form/NewCard/NewCard";
+import EditProfile from "../form/EditProfile/EditProfile";
+import EditAvatar from "../form/EditAvatar/EditAvatar";
 
 export default function Main() {
+  //Se crea un estado popup
+  const [popup, setPopup] = useState(null);
+
+  //Creación de variables que se pasarán como props
+  const newCardPopup = { title: "Nuevo lugar", children: <NewCard /> };
+  const editProfilePopup = {
+    title: "Editar perfil",
+    children: <EditProfile />,
+  };
+  const editAvatarPopup = {
+    title: "Cambiar foto de perfil",
+    children: <EditAvatar />,
+  };
+
+  //Abrir popup
+  function handleOpenPopup(popup) {
+    setPopup(popup);
+  }
+
+  //Cerrar popup
+  function handleClosePopup() {
+    setPopup(null);
+  }
+
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__avatar-container">
           <img className="profile__avatar" src={profileAvatar} alt="Avatar" />
-          <button className="profile__edit-avatar">
+          <button
+            className="profile__edit-avatar"
+            onClick={() => handleOpenPopup(editAvatarPopup)}
+          >
             <img src={updateAvatar} alt="Botón para editar Avatar" />
           </button>
         </div>
@@ -19,7 +51,12 @@ export default function Main() {
             <p className="profile__name">Jacques Cousteau</p>
             <p className="profile__hobbie">Explorador</p>
           </div>
-          <button className="profile__edit-button">
+          <button
+            aria-label="Add card"
+            className="profile__edit-button"
+            type="button"
+            onClick={() => handleOpenPopup(editProfilePopup)}
+          >
             <img
               className="profile__edit-button-img"
               src={editButton}
@@ -27,7 +64,10 @@ export default function Main() {
             />
           </button>
         </div>
-        <button className="profile__add-button">
+        <button
+          className="profile__add-button"
+          onClick={() => handleOpenPopup(newCardPopup)}
+        >
           <img
             className="profile__add-button-img"
             src={addButton}
@@ -59,6 +99,13 @@ export default function Main() {
           </template>
         </div>
       </section>
+
+      {/*renderización condicional cuando popup no es null}*/}
+      {popup && (
+        <Popup onClose={handleClosePopup} title={popup.title}>
+          {popup.children}
+        </Popup>
+      )}
     </main>
   );
 }

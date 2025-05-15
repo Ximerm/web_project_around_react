@@ -1,7 +1,6 @@
 export default function NewCard() {
   return (
     <form className="popup__form" name="card-form" id="form-addCard">
-      <h2 className="popup__form-title">Nuevo lugar</h2>
       <input
         className="popup__form-input"
         type="text"
@@ -10,7 +9,7 @@ export default function NewCard() {
         placeholder="Título"
         minLength="2"
         maxLength="30"
-        autocomplete="off"
+        autoComplete="off"
         required
       />
       <span className="input-error" id="input-title-error"></span>
@@ -21,7 +20,7 @@ export default function NewCard() {
         name="link"
         id="input-link"
         placeholder="URL de la imagen"
-        autocomplete="off"
+        autoComplete="off"
         required
       />
       <span className="input-error" id="input-link-error"></span>
