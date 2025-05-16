@@ -6,7 +6,11 @@ export default function Popup(props) {
 
   return (
     <section className="popup" id="popup-edit">
-      <div className="popup__container">
+      <div
+        className={`popup__container ${
+          !title ? "popup__container_content_image" : ""
+        }`}
+      >
         <img
           className="popup__close"
           src={closeIcon}

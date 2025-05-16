@@ -7,12 +7,36 @@ import { useState } from "react";
 import NewCard from "../form/NewCard/NewCard";
 import EditProfile from "../form/EditProfile/EditProfile";
 import EditAvatar from "../form/EditAvatar/EditAvatar";
+import Card from "./Components/Card/Card";
+import ImagePopup from "./Components/ImagePopup/ImagePopup";
+
+//Creación representación array de tarjetas
+const cards = [
+  {
+    isLiked: false,
+    _id: "5d1f0611d321eb4bdcd707dd",
+    name: "Yosemite Valley",
+    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_yosemite.jpg",
+    owner: "5d1f0611d321eb4bdcd707dd",
+    createdAt: "2019-07-05T08:10:57.741Z",
+  },
+  {
+    isLiked: false,
+    _id: "5d1f064ed321eb4bdcd707de",
+    name: "Lake Louise",
+    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lake-louise.jpg",
+    owner: "5d1f0611d321eb4bdcd707dd",
+    createdAt: "2019-07-05T08:11:58.324Z",
+  },
+];
+
+console.log(cards);
 
 export default function Main() {
   //Se crea un estado popup
   const [popup, setPopup] = useState(null);
 
-  //Creación de variables que se pasarán como props
+  //Creación de variables que se pasarán como props en Popup.jsx
   const newCardPopup = { title: "Nuevo lugar", children: <NewCard /> };
   const editProfilePopup = {
     title: "Editar perfil",
@@ -77,30 +101,24 @@ export default function Main() {
       </section>
 
       <section className="card">
-        <div className="card__element">
-          {/* Plantilla Card--> */}
-          <template id="card-template">
-            <div classNameName="card__content">
-              <img
-                className="card__photo-delete"
-                src="../images/Places/Trash_Vector.svg"
-                alt="Ícono eliminar"
-              />
-              <img className="card__photo" alt="" src="" />
-              <div className="card__info">
-                <h2 className="card__photo-name"></h2>
-                <img
-                  className="card__photo-like"
-                  src="../images/Places/Like_Vector.svg"
-                  alt="Ícono 'Me gusta'"
-                />
-              </div>
-            </div>
-          </template>
-        </div>
+        {/*Se agrega Card*/}
+        <ul className="card__element">
+          {cards.map((card) => (
+            <Card
+              key={card._id}
+              card={card}
+              handleOpenPopup={handleOpenPopup}
+            />
+          ))}
+        </ul>
       </section>
 
-      {/*renderización condicional cuando popup no es null}*/}
+      {/* Renderizar el ImagePopup si se selecciona una imagen */}
+      {popup && popup.link && (
+        <ImagePopup card={popup} onClose={handleClosePopup} />
+      )}
+
+      {/*renderización condicional cuando popup no es null*/}
       {popup && (
         <Popup onClose={handleClosePopup} title={popup.title}>
           {popup.children}
