@@ -4,6 +4,7 @@ import cardLike from "../../../../images/Places/Like_Vector.svg";
 export default function Card(props) {
   const { name, link, isLiked } = props.card;
   const { handleOpenPopup } = props;
+  const { handleRemoveCard } = props;
   const imageComponent = { name, link };
 
   return (
@@ -12,6 +13,7 @@ export default function Card(props) {
         className="card__photo-delete"
         src={cardDelete}
         alt="Ícono eliminar"
+        onClick={handleRemoveCard}
       />
       <img
         className="card__photo"
