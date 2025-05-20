@@ -31,8 +31,6 @@ const cards = [
   },
 ];
 
-console.log(cards);
-
 export default function Main() {
   //Se crea un estado popup
   const [popup, setPopup] = useState(null);
