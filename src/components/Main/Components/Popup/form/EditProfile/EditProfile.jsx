@@ -1,6 +1,7 @@
 export default function EditProfile() {
   return (
     <form className="popup__form" id="form-profile">
+      <h2 className="popup__form-title">Editar perfil</h2>
       <input
         className="popup__form-input"
         type="text"

@@ -35,6 +35,8 @@ console.log(cards);
 export default function Main() {
   //Se crea un estado popup
   const [popup, setPopup] = useState(null);
+  //Variable para que seleccione ImagePopup con la card seleccionada
+  const [selectedCard, setSelectedCard] = useState(null);
 
   //Creación de variables que se pasarán como props en Popup.jsx
   const newCardPopup = { title: "Nuevo lugar", children: <NewCard /> };
@@ -55,6 +57,7 @@ export default function Main() {
   //Cerrar popup
   function handleClosePopup() {
     setPopup(null);
+    setSelectedCard(null);
   }
 
   return (
@@ -114,8 +117,8 @@ export default function Main() {
       </section>
 
       {/* Renderizar el ImagePopup si se selecciona una imagen */}
-      {popup && popup.link && (
-        <ImagePopup card={popup} onClose={handleClosePopup} />
+      {selectedCard && (
+        <ImagePopup card={selectedCard} onClose={handleClosePopup} />
       )}
 
       {/*renderización condicional cuando popup no es null*/}

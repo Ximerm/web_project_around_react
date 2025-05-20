@@ -5,6 +5,7 @@ export default function Card(props) {
   const { name, link, isLiked } = props.card;
   const { handleOpenPopup } = props;
   const imageComponent = { name, link };
+
   return (
     <li className="card__content">
       <img
