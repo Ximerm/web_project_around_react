@@ -2,13 +2,14 @@ import profileAvatar from "../../images/Profile/Avatar.png";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
 import addButton from "../../images/Profile/Add_Button.svg";
-import Popup from "../components/Popup/Popup";
+import Popup from "./components/Popup/Popup";
 import { useState } from "react";
 import NewCard from "./components/Popup/forms/NewCard/NewCard";
 import EditProfile from "./components/Popup/forms/EditProfile/EditProfile";
 import EditAvatar from "./components/Popup/forms/Avatar/EditAvatar";
-import Card from "../components/Card/Card";
+import Card from "./components/Card/Card";
 import ImagePopup from "./components/Popup/forms/ImagePopup/ImagePopup";
+import RemoveCard from "./components/Popup/forms/RemoveCard/RemoveCard";
 
 //Creación representación array de tarjetas
 const cards = [
@@ -50,6 +51,10 @@ export default function Main() {
   const editAvatarPopup = {
     title: "Cambiar foto de perfil",
     children: <EditAvatar title={"Cambiar foto de perfil"} />,
+  };
+
+  const removeCardPopup = {
+    children: <RemoveCard />,
   };
 
   //Abrir popup
@@ -113,7 +118,12 @@ export default function Main() {
             <Card
               key={card._id}
               card={card}
-              handleOpenPopup={handleOpenPopup}
+              handleOpenPopup={() => {
+                setSelectedCard(card);
+              }}
+              handleRemoveCard={() => {
+                setPopup(removeCardPopup);
+              }}
             />
           ))}
         </ul>
