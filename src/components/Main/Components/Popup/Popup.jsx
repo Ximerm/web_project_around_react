@@ -1,4 +1,4 @@
-import closeIcon from "../../../images/Popup/Close_Icon.svg";
+import closeIcon from "../../../../images/Popup/Close_Icon.svg";
 
 export default function Popup(props) {
   //los hijos son el contenido de la ventana emergente
@@ -17,7 +17,7 @@ export default function Popup(props) {
           alt="Ícono cerrar formulario"
           onClick={onClose}
         />
-        <h3 className="popup__form-title">{title}</h3>
+        {title && <h3 className="popup__form-title">{title}</h3>}
         {children}
       </div>
     </section>

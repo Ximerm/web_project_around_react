@@ -2,13 +2,13 @@ import profileAvatar from "../../images/Profile/Avatar.png";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
 import addButton from "../../images/Profile/Add_Button.svg";
-import Popup from "./Popup/Popup";
+import Popup from "./Components/Popup/Popup";
 import { useState } from "react";
-import NewCard from "../form/NewCard/NewCard";
-import EditProfile from "../form/EditProfile/EditProfile";
-import EditAvatar from "../form/EditAvatar/EditAvatar";
+import NewCard from "./Components/Popup/form/NewCard/NewCard";
+import EditProfile from "./Components/Popup/form/EditProfile/EditProfile";
+import EditAvatar from "./Components/Popup/form/Avatar/EditAvatar";
 import Card from "./Components/Card/Card";
-import ImagePopup from "./Components/ImagePopup/ImagePopup";
+import ImagePopup from "./Components/Popup/form/ImagePopup/ImagePopup";
 
 //Creación representación array de tarjetas
 const cards = [

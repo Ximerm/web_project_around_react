@@ -1,4 +1,4 @@
-import closeIcon from "../../../../images/Popup/Close_Icon.svg";
+import closeIcon from "../../../../../../images/Popup/Close_Icon.svg";
 
 export default function ImagePopup(props) {
   const { card, onClose } = props;
