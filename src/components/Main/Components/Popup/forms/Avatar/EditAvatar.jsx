@@ -1,6 +1,7 @@
-export default function EditAvatar() {
+export default function EditAvatar({ title }) {
   return (
     <form className="popup__form" id="form-avatar">
+      {title && <h3 className="popup__form-title">{title}</h3>}
       <input
         type="url"
         className="popup__form-input"

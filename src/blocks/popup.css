@@ -51,6 +51,7 @@
 }
 
 .popup__form-title {
+  color: #000;
   width: 100%;
   margin: 0;
   font-family: "Inter-Black";

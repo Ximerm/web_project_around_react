@@ -1,7 +1,7 @@
-export default function EditProfile() {
+export default function EditProfile({ title }) {
   return (
     <form className="popup__form" id="form-profile">
-      <h2 className="popup__form-title">Editar perfil</h2>
+      {title && <h3 className="popup__form-title">{title}</h3>}
       <input
         className="popup__form-input"
         type="text"

@@ -1,6 +1,7 @@
-export default function NewCard() {
+export default function NewCard({ title }) {
   return (
     <form className="popup__form" name="card-form" id="form-addCard">
+      {title && <h3 className="popup__form-title">{title}</h3>}
       <input
         className="popup__form-input"
         type="text"

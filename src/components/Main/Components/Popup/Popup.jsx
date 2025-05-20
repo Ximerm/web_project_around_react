@@ -17,7 +17,7 @@ export default function Popup(props) {
           alt="Ícono cerrar formulario"
           onClick={onClose}
         />
-        {title && <h3 className="popup__form-title">{title}</h3>}
+
         {children}
       </div>
     </section>

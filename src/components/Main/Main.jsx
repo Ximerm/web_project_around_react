@@ -39,14 +39,17 @@ export default function Main() {
   const [selectedCard, setSelectedCard] = useState(null);
 
   //Creación de variables que se pasarán como props en Popup.jsx
-  const newCardPopup = { title: "Nuevo lugar", children: <NewCard /> };
+  const newCardPopup = {
+    title: "Nuevo lugar",
+    children: <NewCard title={"Nuevo lugar"} />,
+  };
   const editProfilePopup = {
     title: "Editar perfil",
-    children: <EditProfile />,
+    children: <EditProfile title={"Editar Perfil"} />,
   };
   const editAvatarPopup = {
     title: "Cambiar foto de perfil",
-    children: <EditAvatar />,
+    children: <EditAvatar title={"Cambiar foto de perfil"} />,
   };
 
   //Abrir popup
