@@ -1,6 +1,41 @@
+import { useState, useContext } from "react";
+import { CurrentUserContext } from "../../../../../../contexts/CurrentUserContext";
+
 export default function EditProfile({ title }) {
+  // Obtiene el objeto currentUser
+  const userContext = useContext(CurrentUserContext);
+  const { currentUser, handleUpdateUser } = userContext;
+
+  // Agrega la variable de estado para name
+  const [name, setName] = useState(currentUser.name);
+
+  // Agrega la variable de estado para about
+  const [description, setDescription] = useState(currentUser.about);
+
+  // Actualiza name cuando cambie la entrada
+  const handleNameChange = (event) => {
+    setName(event.target.value);
+  };
+
+  // Actualiza description cuando cambie la entrada
+  const handleDescriptionChange = (event) => {
+    setDescription(event.target.value);
+  };
+
+  // Envío de formulario
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Actualiza la información del usuario
+    handleUpdateUser({ name, about: description });
+  };
+
   return (
-    <form className="popup__form" id="form-profile">
+    <form
+      className="popup__form"
+      id="form-profile"
+      noValidate
+      onSubmit={handleSubmit}
+    >
       {title && <h3 className="popup__form-title">{title}</h3>}
       <input
         className="popup__form-input"
@@ -12,6 +47,10 @@ export default function EditProfile({ title }) {
         maxLength="40"
         autoComplete="off"
         required
+        // Vincula name con la entrada
+        value={name}
+        // Agrega el controlador onChange
+        onChange={handleNameChange}
       />
       <span className="input-error" id="input-name-error"></span>
 
@@ -25,6 +64,10 @@ export default function EditProfile({ title }) {
         maxLength="200"
         autoComplete="off"
         required
+        // Vincula description con la entrada
+        value={description}
+        // Agrega el controlador onChange
+        onChange={handleDescriptionChange}
       />
       <span className="input-error" id="input-about-error"></span>
 

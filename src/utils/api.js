@@ -33,6 +33,14 @@ class Api {
     return this._makeRequest(`/cards/${cardId}/likes`, "DELETE");
   }
 
+  changeLikeCardStatus(cardId, like) {
+    if (like) {
+      return this.addLike(cardId);
+    } else {
+      return this.removeLike(cardId);
+    }
+  }
+
   // 6. Eliminar tarjeta
   removeCard(cardId) {
     return this._makeRequest(`/cards/${cardId}`, "DELETE");

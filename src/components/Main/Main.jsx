@@ -1,15 +1,19 @@
+import React, { useState, useContext } from "react";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import profileAvatar from "../../images/Profile/Avatar.png";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
 import addButton from "../../images/Profile/Add_Button.svg";
 import Popup from "./components/Popup/Popup";
-import { useState } from "react";
+
 import NewCard from "./components/Popup/forms/NewCard/NewCard";
 import EditProfile from "./components/Popup/forms/EditProfile/EditProfile";
 import EditAvatar from "./components/Popup/forms/Avatar/EditAvatar";
 import Card from "./components/Card/Card";
 import ImagePopup from "./components/Popup/forms/ImagePopup/ImagePopup";
 import RemoveCard from "./components/Popup/forms/RemoveCard/RemoveCard";
+
+import api from "../../utils/api";
 
 //Creación representación array de tarjetas
 const cards = [
@@ -32,6 +36,9 @@ const cards = [
 ];
 
 export default function Main() {
+  //Obtener el valor de currentUser
+  const { currentUser } = useContext(CurrentUserContext);
+
   //Se crea un estado popup
   const [popup, setPopup] = useState(null);
   //Variable para que seleccione ImagePopup con la card seleccionada
@@ -66,11 +73,32 @@ export default function Main() {
     setSelectedCard(null);
   }
 
+  //Agrega el soporte de "likes" y "dislikes"
+  function handleCardLike(card) {
+    // Verifica una vez más si a esta tarjeta ya les has dado like
+    const isLiked = card.isLiked;
+
+    api
+      .changeLikeCardStatus(card._id, !isLiked)
+      .then((newCard) => {
+        setCards((state) =>
+          state.map((currentCard) =>
+            currentCard._id === card._id ? newCard : currentCard
+          )
+        );
+      })
+      .catch((error) => console.error(error));
+  }
+
   return (
     <main className="content">
       <section className="profile">
         <div className="profile__avatar-container">
-          <img className="profile__avatar" src={profileAvatar} alt="Avatar" />
+          <img
+            className="profile__avatar"
+            src={currentUser.avatar}
+            alt="Avatar"
+          />
           <button
             className="profile__edit-avatar"
             onClick={() => handleOpenPopup(editAvatarPopup)}
@@ -81,8 +109,8 @@ export default function Main() {
 
         <div className="profile__content">
           <div className="profile__info">
-            <p className="profile__name">Jacques Cousteau</p>
-            <p className="profile__hobbie">Explorador</p>
+            <p className="profile__name">{currentUser.name}</p>
+            <p className="profile__hobbie">{currentUser.about}</p>
           </div>
           <button
             aria-label="Add card"
@@ -122,6 +150,7 @@ export default function Main() {
               handleRemoveCard={() => {
                 setPopup(removeCardPopup);
               }}
+              onCardLike={() => handleCardLike(card)}
             />
           ))}
         </ul>

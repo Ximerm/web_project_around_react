@@ -1,6 +1,22 @@
-export default function EditAvatar({ title }) {
+import { useRef } from "react";
+
+export default function EditAvatar({ title, onUpdateAvatar }) {
+  const avatarRef = useRef();
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    onUpdateAvatar({
+      avatar: { avatarRef },
+    });
+  }
+
   return (
-    <form className="popup__form" id="form-avatar">
+    <form
+      className="popup__form"
+      id="form-avatar"
+      onSubmit={handleSubmit}
+      noValidate
+    >
       {title && <h3 className="popup__form-title">{title}</h3>}
       <input
         type="url"
