@@ -68,6 +68,7 @@ export default function EditProfile({ title }) {
         value={description}
         // Agrega el controlador onChange
         onChange={handleDescriptionChange}
+      
       />
       <span className="input-error" id="input-about-error"></span>
 

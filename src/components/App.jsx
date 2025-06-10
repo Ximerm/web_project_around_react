@@ -33,8 +33,8 @@ function App() {
     (async () => {
       await api
         .updateUserAvatar(data.avatar)
-        .then((updatedData) => {
-          setCurrentUser(data.avatar);
+        .then((updatedUser) => {
+          setCurrentUser(updatedUser);
           handleClosePopup();
         })
         .catch((error) => console.error(error));

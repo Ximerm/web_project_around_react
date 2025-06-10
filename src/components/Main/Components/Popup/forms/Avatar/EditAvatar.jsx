@@ -6,7 +6,7 @@ export default function EditAvatar({ title, onUpdateAvatar }) {
   function handleSubmit(e) {
     e.preventDefault();
     onUpdateAvatar({
-      avatar: { avatarRef },
+      avatar: avatarRef.current.value,
     });
   }
 
@@ -25,6 +25,7 @@ export default function EditAvatar({ title, onUpdateAvatar }) {
         name="avatar"
         placeholder="URL de la imagen"
         required
+        ref={avatarRef}
       />
       <span className="input-error input-avatar-error"></span>
       <button type="submit" className="popup__form-submit">
