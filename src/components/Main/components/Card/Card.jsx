@@ -3,6 +3,7 @@ import cardLike from "../../../../images/Places/Like_Vector.svg";
 
 export default function Card(props) {
   const { name, link, isLiked } = props.card;
+  const { card } = props;
   const { handleOpenPopup } = props;
   const { handleRemoveCard } = props;
   const { onCardLike } = props;
