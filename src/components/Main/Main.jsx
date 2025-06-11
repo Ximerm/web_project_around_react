@@ -46,7 +46,14 @@ export default function Main() {
 
   const editAvatarPopup = {
     title: "Cambiar foto de perfil",
-    children: <EditAvatar title={"Cambiar foto de perfil"} />,
+    children: (
+      <EditAvatar
+        title={"Cambiar foto de perfil"}
+        onUpdateAvatar={(data) => {
+          handleUpdateAvatar(data);
+        }}
+      />
+    ),
   };
 
   const removeCardPopup = {
