@@ -16,34 +16,8 @@ function App() {
     })();
   }, []);
 
-  const handleUpdateUser = (data) => {
-    (async () => {
-      await api
-        .updateUser(data)
-        .then((newData) => {
-          setCurrentUser(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
-
-  const handleUpdateAvatar = (data) => {
-    (async () => {
-      await api
-        .updateUserAvatar(data.avatar)
-        .then((updatedUser) => {
-          setCurrentUser(updatedUser);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
-
   return (
-    <CurrentUserContext.Provider
-      value={{ currentUser, handleUpdateUser, handleUpdateAvatar }}
-    >
+    <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
       <div className="page">
         <Header />
         <Main />

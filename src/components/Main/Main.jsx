@@ -17,7 +17,7 @@ import api from "../../utils/api";
 
 export default function Main() {
   //Obtener el valor de currentUser
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   //Obtener tarjetas
   const [cards, setCards] = useState([]);
@@ -34,8 +34,16 @@ export default function Main() {
   };
   const editProfilePopup = {
     title: "Editar perfil",
-    children: <EditProfile title={"Editar Perfil"} />,
+    children: (
+      <EditProfile
+        title={"Editar Perfil"}
+        handleUpdateUser={(data) => {
+          handleUpdateUser(data);
+        }}
+      />
+    ),
   };
+
   const editAvatarPopup = {
     title: "Cambiar foto de perfil",
     children: <EditAvatar title={"Cambiar foto de perfil"} />,
@@ -81,6 +89,32 @@ export default function Main() {
       })
       .catch((error) => console.error(error));
   }
+
+  //Cambiar información de perfil
+  const handleUpdateUser = (data) => {
+    (async () => {
+      await api
+        .updateUser(data.name, data.about)
+        .then((newData) => {
+          setCurrentUser(newData);
+          handleClosePopup();
+        })
+        .catch((error) => console.error(error));
+    })();
+  };
+
+  //Cambiar Avatar
+  const handleUpdateAvatar = (data) => {
+    (async () => {
+      await api
+        .updateUserAvatar(data.avatar)
+        .then((updatedUser) => {
+          setCurrentUser(updatedUser);
+          handleClosePopup();
+        })
+        .catch((error) => console.error(error));
+    })();
+  };
 
   return (
     <main className="content">

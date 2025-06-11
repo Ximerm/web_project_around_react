@@ -1,10 +1,11 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../../../../../contexts/CurrentUserContext";
+import FormValidator from "../../../../../FormValidator";
 
-export default function EditProfile({ title }) {
+export default function EditProfile({ title, handleUpdateUser }) {
   // Obtiene el objeto currentUser
   const userContext = useContext(CurrentUserContext);
-  const { currentUser, handleUpdateUser } = userContext;
+  const { currentUser } = userContext;
 
   // Agrega la variable de estado para name
   const [name, setName] = useState(currentUser.name);
@@ -28,6 +29,20 @@ export default function EditProfile({ title }) {
     // Actualiza la información del usuario
     handleUpdateUser({ name, about: description });
   };
+
+  //Validar formulario
+  useEffect(() => {
+    const profileForm = document.querySelector(".popup__form");
+    const formValidator = new FormValidator(profileForm, {
+      formSelector: ".popup__form",
+      inputSelector: ".popup__form-input",
+      submitButtonSelector: ".popup__form-submit",
+      inactiveButtonClass: "popup__form-submit_disable",
+      inputErrorClass: "popup__form-input_type_error",
+      errorClass: "input-error",
+    });
+    formValidator.enableValidation();
+  }, []);
 
   return (
     <form
@@ -68,7 +83,6 @@ export default function EditProfile({ title }) {
         value={description}
         // Agrega el controlador onChange
         onChange={handleDescriptionChange}
-      
       />
       <span className="input-error" id="input-about-error"></span>
 
