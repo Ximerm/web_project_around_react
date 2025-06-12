@@ -3,16 +3,17 @@ import cardLike from "../../../../images/Places/Like_Vector.svg";
 
 export default function Card(props) {
   const { name, link, isLiked } = props.card;
-  const { card } = props;
-  const { handleOpenPopup } = props;
-  const { handleRemoveCard } = props;
-  const { onCardLike } = props;
+  const { handleOpenBigImage, onCardLike, onCardDelete } = props;
   const imageComponent = { name, link };
 
   // Controlador de clics para manejar el "like"
   function handleLikeClick() {
-    // Llamar a onCardLike pasando la tarjeta
-    onCardLike(props.card);
+    onCardLike();
+  }
+
+  // Controlador para eliminar tarjeta
+  function handleDeleteClick(cardId) {
+    onCardDelete(cardId);
   }
 
   return (
@@ -21,13 +22,13 @@ export default function Card(props) {
         className="card__photo-delete"
         src={cardDelete}
         alt="Ícono eliminar"
-        onClick={handleRemoveCard}
+        onClick={handleDeleteClick}
       />
       <img
         className="card__photo"
         alt={name}
         src={link}
-        onClick={() => handleOpenPopup(imageComponent)}
+        onClick={() => handleOpenBigImage(imageComponent)}
       />
       <div className="card__info">
         <h2 className="card__photo-name">{name}</h2>
@@ -37,7 +38,7 @@ export default function Card(props) {
           }`}
           src={cardLike}
           alt="Ícono 'Me gusta'"
-          onClick={() => handleLikeClick(card)}
+          onClick={handleLikeClick}
         />
       </div>
     </li>

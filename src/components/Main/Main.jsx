@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
@@ -12,22 +12,22 @@ import Card from "./components/Card/Card";
 import ImagePopup from "./components/Popup/forms/ImagePopup/ImagePopup";
 import RemoveCard from "./components/Popup/forms/RemoveCard/RemoveCard";
 
-import api from "../../utils/api";
-
-export default function Main() {
+export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
   //Obtener el valor de currentUser
-  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const {
+    currentUser,
+    handleUpdateUser,
+    handleUpdateAvatar,
+    handleCardLike,
+    handleCardDelete,
+    handleAddPlaceSubmit,
+  } = useContext(CurrentUserContext);
 
-  //Obtener tarjetas
-  const [cards, setCards] = useState([]);
-
-  //Se crea un estado popup
-  const [popup, setPopup] = useState(null);
   //Variable para que seleccione ImagePopup con la card seleccionada
   const [selectedCard, setSelectedCard] = useState(null);
 
-  //Variable para que elimine la card seleccionada y no repinte la tarjeta
-  const selectedRemoveCard = useRef("");
+  // Tarjeta seleccionada para eliminar
+  const [cardToDelete, setCardToDelete] = useState(null);
 
   //Creación de variables que se pasarán como props en Popup.jsx
   const newCardPopup = {
@@ -35,7 +35,7 @@ export default function Main() {
     children: (
       <NewCard
         title={"Nuevo lugar"}
-        handleAddCard={(event) => handleAddCard(event)}
+        onAddPlaceSubmit={(event) => handleAddPlaceSubmit(event)}
       />
     ),
   };
@@ -67,95 +67,33 @@ export default function Main() {
   };
 
   const removeCardPopup = {
-    children: <RemoveCard handleSubmit={(evt) => handleRemoveCard(evt)} />,
+    title: "Eliminar tarjeta",
+    children: <RemoveCard handleSubmit={handleDeleteConfirmation} />,
   };
 
-  //LLamar a las tarjetas desde la API
-  useEffect(() => {
-    (async () => {
-      await api.getInitialCards().then((data) => {
-        setCards(data);
-      });
-    })();
-  }, []);
-
-  //Abrir popup
-  function handleOpenPopup(popup) {
-    setPopup(popup);
-  }
-
-  //Cerrar popup
-  function handleClosePopup() {
-    setPopup(null);
+  // Función para cerrar el popup de imagen grande
+  const handleCloseImagePopup = () => {
     setSelectedCard(null);
+  };
+
+  // Función que se pasa a Card para abrir el popup de confirmación de eliminar tarjeta
+  function handleOpenRemoveCardPopup(cardId) {
+    setCardToDelete(cardId);
+    onOpenPopup(removeCardPopup);
   }
 
-  //Agrega el soporte de "likes" y "dislikes"
-  function handleCardLike(card) {
-    // Verifica una vez más si a esta tarjeta ya les has dado like
-    const isLiked = card.isLiked;
-
-    api
-      .changeLikeCardStatus(card._id, !isLiked)
-      .then((newCard) => {
-        setCards((state) =>
-          state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard
-          )
-        );
+  // Función que maneja la confirmación de borrar tarjeta
+  function handleDeleteConfirmation(evt) {
+    evt.preventDefault();
+    if (!cardToDelete) return;
+    handleCardDelete(cardToDelete._id)
+      .then(() => {
+        setCardToDelete(null);
+        onClosePopup();
       })
-      .catch((error) => console.error(error));
-  }
-
-  //Cambiar información de perfil
-  const handleUpdateUser = (data) => {
-    (async () => {
-      await api
-        .updateUser(data.name, data.about)
-        .then((newData) => {
-          setCurrentUser(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
-
-  //Cambiar Avatar
-  const handleUpdateAvatar = (data) => {
-    (async () => {
-      await api
-        .updateUserAvatar(data.avatar)
-        .then((updatedUser) => {
-          setCurrentUser(updatedUser);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
-
-  //Agregar Nueva tarjeta
-  const handleAddCard = (evt) => {
-    evt.preventDefault();
-    const name = evt.target.name.value;
-    const link = evt.target.link.value;
-    api.addNewCard(name, link).then((newCard) => {
-      setCards([newCard, ...cards]);
-      handleClosePopup();
-    });
-  };
-
-  //Eliminar tarjeta
-  function handleRemoveCard(evt) {
-    evt.preventDefault();
-    api.removeCard(selectedRemoveCard.current).then(() => {
-      setCards((state) =>
-        //Filter para que seleccione las tarjetas diferentes a la que se quiere remover
-        state.filter(
-          (currentCard) => currentCard._id !== selectedRemoveCard.current
-        )
-      );
-      handleClosePopup();
-    });
+      .catch((err) => {
+        console.error("Error eliminando tarjeta:", err);
+      });
   }
 
   return (
@@ -169,7 +107,7 @@ export default function Main() {
           />
           <button
             className="profile__edit-avatar"
-            onClick={() => handleOpenPopup(editAvatarPopup)}
+            onClick={() => onOpenPopup(editAvatarPopup)}
           >
             <img src={updateAvatar} alt="Botón para editar Avatar" />
           </button>
@@ -184,7 +122,7 @@ export default function Main() {
             aria-label="Add card"
             className="profile__edit-button"
             type="button"
-            onClick={() => handleOpenPopup(editProfilePopup)}
+            onClick={() => onOpenPopup(editProfilePopup)}
           >
             <img
               className="profile__edit-button-img"
@@ -195,7 +133,7 @@ export default function Main() {
         </div>
         <button
           className="profile__add-button"
-          onClick={() => handleOpenPopup(newCardPopup)}
+          onClick={() => onOpenPopup(newCardPopup)}
         >
           <img
             className="profile__add-button-img"
@@ -212,13 +150,10 @@ export default function Main() {
             <Card
               key={card._id}
               card={card}
-              handleOpenPopup={() => {
+              handleOpenBigImage={() => {
                 setSelectedCard(card);
               }}
-              handleRemoveCard={() => {
-                selectedRemoveCard.current = card._id;
-                setPopup(removeCardPopup);
-              }}
+              onCardDelete={() => handleOpenRemoveCardPopup(card)}
               onCardLike={() => handleCardLike(card)}
             />
           ))}
@@ -227,12 +162,12 @@ export default function Main() {
 
       {/* Renderizar el ImagePopup si se selecciona una imagen */}
       {selectedCard && (
-        <ImagePopup card={selectedCard} onClose={handleClosePopup} />
+        <ImagePopup card={selectedCard} onClose={handleCloseImagePopup} />
       )}
 
       {/*renderización condicional cuando popup no es null*/}
       {popup && (
-        <Popup onClose={handleClosePopup} title={popup.title}>
+        <Popup onClose={onClosePopup} title={popup.title}>
           {popup.children}
         </Popup>
       )}
