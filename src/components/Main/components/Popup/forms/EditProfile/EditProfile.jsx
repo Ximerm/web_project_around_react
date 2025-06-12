@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react";
 import { CurrentUserContext } from "../../../../../../contexts/CurrentUserContext";
-import FormValidator from "../../../../../FormValidator";
+import FormValidator from "../../../../../../utils/FormValidator";
 
 export default function EditProfile({ title, handleUpdateUser }) {
   // Obtiene el objeto currentUser

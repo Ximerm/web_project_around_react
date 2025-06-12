@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import { CurrentUserContext } from "../../../../../../contexts/CurrentUserContext";
-import FormValidator from "../../../../../FormValidator";
+import FormValidator from "../../../../../../utils/FormValidator";
 
 export default function NewCard({ title, onAddPlaceSubmit }) {
   // Obtiene el objeto currentUser
