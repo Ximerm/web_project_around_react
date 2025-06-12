@@ -78,12 +78,13 @@ function App() {
   }
 
   //Eliminar tarjeta
-  function handleCardDelete(cardId) {
-    api
-      .removeCard(cardId)
+  async function handleCardDelete(cardId) {
+    const selectedCardId = cardId;
+    await api
+      .removeCard(selectedCardId)
       .then(() => {
-        setCards(
-          (state) => state.filter((currentCard) => currentCard._id !== cardId) // Filtrar la tarjeta eliminada
+        setCards((state) =>
+          state.filter((card) => card._id !== selectedCardId)
         );
         handleClosePopup();
       })

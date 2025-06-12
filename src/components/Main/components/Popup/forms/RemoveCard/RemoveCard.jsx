@@ -1,4 +1,10 @@
-export default function RemoveCard({ handleSubmit }) {
+import React from "react";
+
+export default function RemoveCard({ onConfirm }) {
+  function handleSubmit(event) {
+    event.preventDefault();
+    onConfirm();
+  }
   return (
     <form
       onSubmit={handleSubmit}

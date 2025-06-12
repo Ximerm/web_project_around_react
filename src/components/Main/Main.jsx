@@ -68,7 +68,7 @@ export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
 
   const removeCardPopup = {
     title: "Eliminar tarjeta",
-    children: <RemoveCard handleSubmit={handleDeleteConfirmation} />,
+    children: <RemoveCard onConfirm={handleDeleteConfirmation} />,
   };
 
   // Función para cerrar el popup de imagen grande
@@ -76,24 +76,22 @@ export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
     setSelectedCard(null);
   };
 
-  // Función que se pasa a Card para abrir el popup de confirmación de eliminar tarjeta
-  function handleOpenRemoveCardPopup(cardId) {
+  // Abrir el popup de confirmación de eliminar tarjeta
+  const handleOpenRemoveCardPopup = (cardId) => {
     setCardToDelete(cardId);
     onOpenPopup(removeCardPopup);
-  }
+  };
 
-  // Función que maneja la confirmación de borrar tarjeta
-  function handleDeleteConfirmation(evt) {
-    evt.preventDefault();
+  // Función asincrónica para espera correcta de eliminación
+  async function handleDeleteConfirmation() {
     if (!cardToDelete) return;
-    handleCardDelete(cardToDelete._id)
-      .then(() => {
-        setCardToDelete(null);
-        onClosePopup();
-      })
-      .catch((err) => {
-        console.error("Error eliminando tarjeta:", err);
-      });
+    try {
+      await handleCardDelete(cardToDelete._id);
+      setCardToDelete(null);
+      onClosePopup();
+    } catch (error) {
+      console.error("Error eliminando tarjeta:", error);
+    }
   }
 
   return (
@@ -153,8 +151,8 @@ export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
               handleOpenBigImage={() => {
                 setSelectedCard(card);
               }}
-              onCardDelete={() => handleOpenRemoveCardPopup(card)}
               onCardLike={() => handleCardLike(card)}
+              onCardDelete={() => handleOpenRemoveCardPopup(card)}
             />
           ))}
         </ul>
