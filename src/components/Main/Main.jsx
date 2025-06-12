@@ -30,13 +30,20 @@ export default function Main() {
   //Creación de variables que se pasarán como props en Popup.jsx
   const newCardPopup = {
     title: "Nuevo lugar",
-    children: <NewCard title={"Nuevo lugar"} />,
+    children: (
+      <NewCard
+        title={"Nuevo lugar"}
+        handleAddCard={(event) => handleAddCard(event)}
+      />
+    ),
   };
+
   const editProfilePopup = {
     title: "Editar perfil",
     children: (
       <EditProfile
         title={"Editar Perfil"}
+        // Se coloca dos veces la función para que cuando renderice espere a que exista
         handleUpdateUser={(data) => {
           handleUpdateUser(data);
         }}
@@ -49,6 +56,7 @@ export default function Main() {
     children: (
       <EditAvatar
         title={"Cambiar foto de perfil"}
+        // Se coloca dos veces la función para que cuando renderice espere a que exista
         onUpdateAvatar={(data) => {
           handleUpdateAvatar(data);
         }}
@@ -121,6 +129,17 @@ export default function Main() {
         })
         .catch((error) => console.error(error));
     })();
+  };
+
+  //Agregar Nueva tarjeta
+  const handleAddCard = (evt) => {
+    evt.preventDefault();
+    const name = evt.target.name.value;
+    const link = evt.target.link.value;
+    api.addNewCard(name, link).then((newCard) => {
+      setCards([newCard, ...cards]);
+      handleClosePopup();
+    });
   };
 
   return (
