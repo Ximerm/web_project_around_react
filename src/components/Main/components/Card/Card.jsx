@@ -1,3 +1,4 @@
+import React from "react";
 import cardDelete from "../../../../images/Places/Trash_Vector.svg";
 import cardLike from "../../../../images/Places/Like_Vector.svg";
 
@@ -12,8 +13,8 @@ export default function Card(props) {
   }
 
   // Controlador para eliminar tarjeta
-  function handleDeleteClick(cardId) {
-    onCardDelete(cardId);
+  function handleDeleteClick() {
+    onCardDelete(props.card);
   }
 
   return (

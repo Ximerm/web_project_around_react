@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
@@ -26,8 +26,11 @@ export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
   //Variable para que seleccione ImagePopup con la card seleccionada
   const [selectedCard, setSelectedCard] = useState(null);
 
-  // Tarjeta seleccionada para eliminar
+  // Variable para tarjeta seleccionada para eliminar
   const [cardToDelete, setCardToDelete] = useState(null);
+
+  // Estado para manejar el estado de eliminación
+  const [isDeleting, setIsDeleting] = useState(false);
 
   //Creación de variables que se pasarán como props en Popup.jsx
   const newCardPopup = {
@@ -68,7 +71,12 @@ export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
 
   const removeCardPopup = {
     title: "Eliminar tarjeta",
-    children: <RemoveCard onConfirm={handleDeleteConfirmation} />,
+    children: (
+      <RemoveCard
+        onConfirm={handleDeleteConfirmation}
+        isDeleting={isDeleting}
+      />
+    ),
   };
 
   // Función para cerrar el popup de imagen grande
@@ -77,20 +85,30 @@ export default function Main({ onOpenPopup, onClosePopup, popup, cards }) {
   };
 
   // Abrir el popup de confirmación de eliminar tarjeta
-  const handleOpenRemoveCardPopup = (cardId) => {
-    setCardToDelete(cardId);
+  const handleOpenRemoveCardPopup = (card) => {
+    setCardToDelete(card);
     onOpenPopup(removeCardPopup);
   };
 
   // Función asincrónica para espera correcta de eliminación
   async function handleDeleteConfirmation() {
     if (!cardToDelete) return;
+    setIsDeleting(true); // Activar estado de eliminación
     try {
-      await handleCardDelete(cardToDelete._id);
+      // Actualizar el estado inmediatamente
+      const updatedCards = cards.filter(
+        (card) => card._id !== cardToDelete._id
+      );
       setCardToDelete(null);
       onClosePopup();
+      await handleCardDelete(cardToDelete._id); // Llamada a la API
+      // Actualizar el estado de las tarjetas
+      setCards(updatedCards);
     } catch (error) {
       console.error("Error eliminando tarjeta:", error);
+    } finally {
+      s;
+      setIsDeleting(false); // Desactivar estado de eliminación
     }
   }
 
