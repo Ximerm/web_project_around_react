@@ -1,6 +1,10 @@
-export default function RemoveCard() {
+export default function RemoveCard({ handleSubmit }) {
   return (
-    <form className="popup__form popup__form_height_low" id="form-deleteCard">
+    <form
+      onSubmit={handleSubmit}
+      className="popup__form popup__form_height_low"
+      id="form-deleteCard"
+    >
       <h2 className="popup__form-title popup__form-title_small_padding">
         ¿Estás seguro?
       </h2>

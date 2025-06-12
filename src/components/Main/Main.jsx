@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
-import profileAvatar from "../../images/Profile/Avatar.png";
 import updateAvatar from "../../images/Profile/Update_Avatar_Icon.svg";
 import editButton from "../../images/Profile/Edit_Button.svg";
 import addButton from "../../images/Profile/Add_Button.svg";
@@ -26,6 +25,9 @@ export default function Main() {
   const [popup, setPopup] = useState(null);
   //Variable para que seleccione ImagePopup con la card seleccionada
   const [selectedCard, setSelectedCard] = useState(null);
+
+  //Variable para que elimine la card seleccionada y no repinte la tarjeta
+  const selectedRemoveCard = useRef("");
 
   //Creación de variables que se pasarán como props en Popup.jsx
   const newCardPopup = {
@@ -65,7 +67,7 @@ export default function Main() {
   };
 
   const removeCardPopup = {
-    children: <RemoveCard />,
+    children: <RemoveCard handleSubmit={(evt) => handleRemoveCard(evt)} />,
   };
 
   //LLamar a las tarjetas desde la API
@@ -142,6 +144,20 @@ export default function Main() {
     });
   };
 
+  //Eliminar tarjeta
+  function handleRemoveCard(evt) {
+    evt.preventDefault();
+    api.removeCard(selectedRemoveCard.current).then(() => {
+      setCards((state) =>
+        //Filter para que seleccione las tarjetas diferentes a la que se quiere remover
+        state.filter(
+          (currentCard) => currentCard._id !== selectedRemoveCard.current
+        )
+      );
+      handleClosePopup();
+    });
+  }
+
   return (
     <main className="content">
       <section className="profile">
@@ -200,6 +216,7 @@ export default function Main() {
                 setSelectedCard(card);
               }}
               handleRemoveCard={() => {
+                selectedRemoveCard.current = card._id;
                 setPopup(removeCardPopup);
               }}
               onCardLike={() => handleCardLike(card)}
